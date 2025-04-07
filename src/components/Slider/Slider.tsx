@@ -16,7 +16,6 @@ interface SliderProps {
 export const Slider: React.FC<SliderProps> = ({ onAccept, onDecline }) => {
   // Main state of the slider
   const [sliderState, setSliderState] = useState<SliderState>("neutral");
-  const [currentX, setCurrentX] = useState(0);
 
   // Constants for drag limits
   const MAX_DRAG_DISTANCE = 200; // pixels
@@ -25,8 +24,6 @@ export const Slider: React.FC<SliderProps> = ({ onAccept, onDecline }) => {
 
   // Handle orb drag
   const handleOrbDrag = (x: number) => {
-    setCurrentX(x);
-    // Only update visual state during drag
     if (x > 0) {
       setSliderState("accepting");
     } else if (x < 0) {
@@ -39,14 +36,15 @@ export const Slider: React.FC<SliderProps> = ({ onAccept, onDecline }) => {
   // Handle orb release
   const handleOrbRelease = () => {
     // Only trigger actions if the orb is at the extended extremes
-    if (currentX >= maxRight + SLIDER_ORB_MARGIN_OFFSET * 0.95) {
-      onAccept?.();
-    } else if (currentX <= maxLeft - SLIDER_ORB_MARGIN_OFFSET * 0.95) {
-      onDecline?.();
+    const threshold = MAX_DRAG_DISTANCE * 0.9;
+    if (Math.abs(threshold) >= threshold) {
+      if (threshold > 0) {
+        onAccept?.();
+      } else {
+        onDecline?.();
+      }
     }
-    // Reset to neutral state
     setSliderState("neutral");
-    setCurrentX(0);
   };
 
   return (
