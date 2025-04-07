@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import { SliderState } from "./Slider";
 
@@ -24,6 +24,34 @@ type ArrowAssets = {
   useLottie: boolean;
 };
 
+// Component to preload all assets
+const PreloadAssets: React.FC = () => {
+  useEffect(() => {
+    // Preload static images
+    const images = [
+      orangeLeftArrows,
+      orangeRightArrows,
+      greenLeftArrows,
+      greenRightArrows,
+      redLeftArrows,
+      redRightArrows,
+    ];
+
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+
+    // Preload Lottie animations
+    const lottieAnimations = [
+      glowingLeftArrowsAnimation,
+      glowingRightArrowsAnimation,
+    ];
+  }, []);
+
+  return null;
+};
+
 const SliderArrows: React.FC<SliderArrowsProps> = ({ state }) => {
   // Get the appropriate arrow assets based on state
   const getArrowAssets = (): ArrowAssets => {
@@ -44,25 +72,28 @@ const SliderArrows: React.FC<SliderArrowsProps> = ({ state }) => {
   const { left, right, useLottie } = getArrowAssets();
 
   return (
-    <div className="pointer-events-none absolute inset-0 flex h-full w-full items-center justify-center">
-      {/* Left arrow - positioned 150px to the left of center */}
-      <div className="absolute left-[calc(50%-150px)]">
-        {useLottie ? (
-          <Lottie animationData={left} loop={true} className="h-12 w-12" />
-        ) : (
-          <img src={left as string} alt="Left arrows" className="h-12 w-12" />
-        )}
-      </div>
+    <>
+      <PreloadAssets />
+      <div className="pointer-events-none absolute inset-0 flex h-full w-full items-center justify-center">
+        {/* Left arrow - positioned 150px to the left of center */}
+        <div className="absolute left-[calc(50%-150px)]">
+          {useLottie ? (
+            <Lottie animationData={left} loop={true} className="h-12 w-12" />
+          ) : (
+            <img src={left as string} alt="Left arrows" className="h-12 w-12" />
+          )}
+        </div>
 
-      {/* Right arrow - positioned 150px to the right of center */}
-      <div className="absolute right-[calc(50%-150px)]">
-        {useLottie ? (
-          <Lottie animationData={right} loop={true} className="h-12 w-12" />
-        ) : (
-          <img src={right as string} alt="Right arrows" className="h-12 w-12" />
-        )}
+        {/* Right arrow - positioned 150px to the right of center */}
+        <div className="absolute right-[calc(50%-150px)]">
+          {useLottie ? (
+            <Lottie animationData={right} loop={true} className="h-12 w-12" />
+          ) : (
+            <img src={right as string} alt="Right arrows" className="h-12 w-12" />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import orangeButton from "../../assets/StaticAssets/orange_button.png";
 import greenButton from "../../assets/StaticAssets/green_button.png";
@@ -38,6 +38,20 @@ interface SliderOrbProps {
   onStateChange: (state: SliderState) => void;
   onActionComplete: (state: SliderState) => void;
 }
+
+// Component to preload all button images
+const PreloadAssets: React.FC = () => {
+  useEffect(() => {
+    // Preload button images
+    const images = [orangeButton, greenButton, redButton];
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
+  return null;
+};
 
 /**
  * SliderOrb Component
@@ -113,57 +127,60 @@ const SliderOrb: React.FC<SliderOrbProps> = ({
   };
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center">
-      <div className="relative flex items-center justify-center" style={{ minWidth: ORB_CONFIG.buttonSize }}>
-        <motion.div
-          className="cursor-grab"
-          style={{
-            width: ORB_CONFIG.buttonSize,
-            height: ORB_CONFIG.buttonSize,
-            flexShrink: 0
-          }}
-          drag="x"
-          dragConstraints={{
-            left: -ORB_CONFIG.dragDistance,
-            right: ORB_CONFIG.dragDistance,
-          }}
-          dragElastic={0.1}
-          dragMomentum={false}
-          animate={controls}
-          onDrag={(_, info) => {
-            const x = info.offset.x;
-            lastX.current = x;
-            const newState = getSliderState(x);
-            setCurrentState(newState);
-            onStateChange(newState);
-          }}
-          onDragEnd={handleDragEnd}
-        >
-          {/* Clickable hit area - constrained to buttonSize */}
-          <div className="w-full h-full rounded-full bg-transparent" />
-          
-          {/* Visual element container - sized to full image dimensions */}
-          <div className="absolute left-1/2 top-1/2" style={{
-            width: ORB_CONFIG.imageWidth,
-            height: ORB_CONFIG.imageHeight,
-            transform: 'translate(-50%, -50%)'
-          }}>
-            <motion.img
-              src={getButtonImage(currentState)}
-              alt="Slider button"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain'
-              }}
-              className="select-none pointer-events-none"
-              draggable="false"
-              whileDrag={{ scale: 1.1 }}
-            />
-          </div>
-        </motion.div>
+    <>
+      <PreloadAssets />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="relative flex items-center justify-center" style={{ minWidth: ORB_CONFIG.buttonSize }}>
+          <motion.div
+            className="cursor-grab"
+            style={{
+              width: ORB_CONFIG.buttonSize,
+              height: ORB_CONFIG.buttonSize,
+              flexShrink: 0
+            }}
+            drag="x"
+            dragConstraints={{
+              left: -ORB_CONFIG.dragDistance,
+              right: ORB_CONFIG.dragDistance,
+            }}
+            dragElastic={0.1}
+            dragMomentum={false}
+            animate={controls}
+            onDrag={(_, info) => {
+              const x = info.offset.x;
+              lastX.current = x;
+              const newState = getSliderState(x);
+              setCurrentState(newState);
+              onStateChange(newState);
+            }}
+            onDragEnd={handleDragEnd}
+          >
+            {/* Clickable hit area - constrained to buttonSize */}
+            <div className="w-full h-full rounded-full bg-transparent" />
+            
+            {/* Visual element container - sized to full image dimensions */}
+            <div className="absolute left-1/2 top-1/2" style={{
+              width: ORB_CONFIG.imageWidth,
+              height: ORB_CONFIG.imageHeight,
+              transform: 'translate(-50%, -50%)'
+            }}>
+              <motion.img
+                src={getButtonImage(currentState)}
+                alt="Slider button"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain'
+                }}
+                className="select-none pointer-events-none"
+                draggable="false"
+                whileDrag={{ scale: 1.1 }}
+              />
+            </div>
+          </motion.div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
