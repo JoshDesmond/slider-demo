@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import orangeButton from "../../assets/StaticAssets/orange_button.png";
 import greenButton from "../../assets/StaticAssets/green_button.png";
@@ -67,13 +67,14 @@ const SliderOrb: React.FC<SliderOrbProps> = ({
 }) => {
   const controls = useAnimation();
   const lastX = useRef(0);
+  const [currentState, setCurrentState] = useState<SliderState>("neutral");
 
   /**
-   * Determines which button image to display based on current x position
+   * Determines which button image to display based on current state
    */
-  const getButtonImage = (x: number) => {
-    if (x > 0) return greenButton;
-    if (x < 0) return redButton;
+  const getButtonImage = (state: SliderState) => {
+    if (state === "accepting") return greenButton;
+    if (state === "declining") return redButton;
     return orangeButton;
   };
 
@@ -93,6 +94,10 @@ const SliderOrb: React.FC<SliderOrbProps> = ({
    * - Returns orb to center with spring animation
    */
   const handleDragEnd = async () => {
+    // Set state to neutral immediately when drag ends
+    setCurrentState("neutral");
+    onStateChange("neutral");
+    
     const finalState = getSliderState(lastX.current);
     const threshold = ORB_CONFIG.dragDistance * ORB_CONFIG.actionThreshold;
 
@@ -104,7 +109,7 @@ const SliderOrb: React.FC<SliderOrbProps> = ({
       x: 0,
       transition: SPRING_CONFIG
     });
-    onStateChange("neutral");
+    lastX.current = 0;
   };
 
   return (
@@ -128,7 +133,9 @@ const SliderOrb: React.FC<SliderOrbProps> = ({
           onDrag={(_, info) => {
             const x = info.offset.x;
             lastX.current = x;
-            onStateChange(getSliderState(x));
+            const newState = getSliderState(x);
+            setCurrentState(newState);
+            onStateChange(newState);
           }}
           onDragEnd={handleDragEnd}
         >
@@ -142,7 +149,7 @@ const SliderOrb: React.FC<SliderOrbProps> = ({
             transform: 'translate(-50%, -50%)'
           }}>
             <motion.img
-              src={getButtonImage(lastX.current)}
+              src={getButtonImage(currentState)}
               alt="Slider button"
               style={{
                 width: '100%',
