@@ -36,13 +36,13 @@ const SliderArrows: React.FC<SliderArrowsProps> = ({ state }) => {
   return (
     <div className="pointer-events-none absolute inset-0 flex h-full w-full items-center justify-center">
       {/* Left arrow - positioned 150px to the left of center */}
-      <div className="absolute left-[calc(50%-180px)]">
-        <img src={left} alt="Left arrows" className="h-8 w-8" />
+      <div className="absolute left-[calc(50%-150px)]">
+        <img src={left} alt="Left arrows" className="h-12 w-12" />
       </div>
 
       {/* Right arrow - positioned 150px to the right of center */}
-      <div className="absolute right-[calc(50%-180px)]">
-        <img src={right} alt="Right arrows" className="h-8 w-8" />
+      <div className="absolute right-[calc(50%-150px)]">
+        <img src={right} alt="Right arrows" className="h-12 w-12" />
       </div>
     </div>
   );
