@@ -4,6 +4,9 @@ import orangeButton from "../../assets/StaticAssets/orange_button.png";
 import greenButton from "../../assets/StaticAssets/green_button.png";
 import redButton from "../../assets/StaticAssets/red_button.png";
 
+// Additional margin offset (in pixels) to allow the orb to visually reach the track edges
+export const SLIDER_ORB_MARGIN_OFFSET = 70;
+
 interface SliderOrbProps {
   onDrag: (x: number) => void;
   onRelease: () => void;
@@ -33,14 +36,14 @@ const SliderOrb: React.FC<SliderOrbProps> = ({
 
     const handleGlobalMouseMove = (e: MouseEvent) => {
       const deltaX = e.clientX - startX.current;
-      const newX = Math.max(maxLeft, Math.min(maxRight, deltaX));
+      const newX = Math.max(maxLeft - SLIDER_ORB_MARGIN_OFFSET, Math.min(maxRight + SLIDER_ORB_MARGIN_OFFSET, deltaX));
       x.set(newX);
       onDrag(newX);
     };
 
     const handleGlobalTouchMove = (e: TouchEvent) => {
       const deltaX = e.touches[0].clientX - startX.current;
-      const newX = Math.max(maxLeft, Math.min(maxRight, deltaX));
+      const newX = Math.max(maxLeft - SLIDER_ORB_MARGIN_OFFSET, Math.min(maxRight + SLIDER_ORB_MARGIN_OFFSET, deltaX));
       x.set(newX);
       onDrag(newX);
     };

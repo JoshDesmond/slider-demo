@@ -1,6 +1,6 @@
 import { useState } from "react";
 import SliderTrack from "./SliderTrack.tsx";
-import SliderOrb from "./SliderOrb.tsx";
+import SliderOrb, { SLIDER_ORB_MARGIN_OFFSET } from "./SliderOrb.tsx";
 import SliderDisplay from "./SliderDisplay.tsx";
 import SliderGlow from "./SliderGlow.tsx";
 import SliderArrows from "./SliderArrows.tsx";
@@ -38,10 +38,10 @@ export const Slider: React.FC<SliderProps> = ({ onAccept, onDecline }) => {
 
   // Handle orb release
   const handleOrbRelease = () => {
-    // Only trigger actions if the orb is at the extremes
-    if (currentX >= maxRight) {
+    // Only trigger actions if the orb is at the extended extremes
+    if (currentX >= maxRight + SLIDER_ORB_MARGIN_OFFSET * 0.95) {
       onAccept?.();
-    } else if (currentX <= maxLeft) {
+    } else if (currentX <= maxLeft - SLIDER_ORB_MARGIN_OFFSET * 0.95) {
       onDecline?.();
     }
     // Reset to neutral state
@@ -52,7 +52,7 @@ export const Slider: React.FC<SliderProps> = ({ onAccept, onDecline }) => {
   return (
     <SliderTrack state={sliderState}>
       <SliderDisplay state={sliderState} />
-      <SliderGlow visible={sliderState === "neutral"} />
+      {/*<SliderGlow visible={sliderState === "neutral"} />*/}
       <SliderArrows state={sliderState} />
       <SliderOrb
         onDrag={handleOrbDrag}
