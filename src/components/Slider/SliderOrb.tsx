@@ -19,8 +19,8 @@ const ORB_CONFIG = {
   buttonSize: 122,
   imageWidth: 265,
   imageHeight: 228,
-  dragDistance: 200,
-  actionThreshold: 0.9
+  dragDistance: 250,
+  actionThreshold: 0.72
 } as const;
 
 /**
@@ -129,7 +129,7 @@ const SliderOrb: React.FC<SliderOrbProps> = ({
   return (
     <>
       <PreloadAssets />
-      <div className="absolute inset-0 flex items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-center -mt-2">
         <div className="relative flex items-center justify-center" style={{ minWidth: ORB_CONFIG.buttonSize }}>
           <motion.div
             className="cursor-grab"
