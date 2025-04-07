@@ -16,49 +16,30 @@ interface SliderProps {
 export const Slider: React.FC<SliderProps> = ({ onAccept, onDecline }) => {
   // Main state of the slider
   const [sliderState, setSliderState] = useState<SliderState>("neutral");
-  const [currentX, setCurrentX] = useState(0);
 
-  // Constants for drag limits
-  const MAX_DRAG_DISTANCE = 200; // pixels
-  const maxLeft = -MAX_DRAG_DISTANCE;
-  const maxRight = MAX_DRAG_DISTANCE;
-
-  // Handle orb drag
-  const handleOrbDrag = (x: number) => {
-    setCurrentX(x);
-    // Only update visual state during drag
-    if (x > 0) {
-      setSliderState("accepting");
-    } else if (x < 0) {
-      setSliderState("declining");
-    } else {
-      setSliderState("neutral");
-    }
+  // Handle state changes from the orb
+  const handleStateChange = (newState: SliderState) => {
+    setSliderState(newState);
   };
 
-  // Handle orb release
-  const handleOrbRelease = () => {
-    // Only trigger actions if the orb is at the extremes
-    if (currentX >= maxRight) {
+  // Handle completion of slide action
+  const handleActionComplete = (state: SliderState) => {
+    if (state === "accepting") {
       onAccept?.();
-    } else if (currentX <= maxLeft) {
+    } else if (state === "declining") {
       onDecline?.();
     }
-    // Reset to neutral state
     setSliderState("neutral");
-    setCurrentX(0);
   };
 
   return (
     <SliderTrack state={sliderState}>
       <SliderDisplay state={sliderState} />
-      <SliderGlow visible={sliderState === "neutral"} />
+      {/*<SliderGlow visible={sliderState === "neutral"} />*/}
       <SliderArrows state={sliderState} />
       <SliderOrb
-        onDrag={handleOrbDrag}
-        onRelease={handleOrbRelease}
-        maxLeft={maxLeft}
-        maxRight={maxRight}
+        onStateChange={handleStateChange}
+        onActionComplete={handleActionComplete}
       />
     </SliderTrack>
   );

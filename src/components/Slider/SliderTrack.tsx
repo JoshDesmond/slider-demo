@@ -11,18 +11,28 @@ const SliderTrack: React.FC<SliderTrackProps> = ({ state, children }) => {
   const getTrackStyling = () => {
     switch (state) {
       case "accepting":
-        return "bg-slider-green-light border-slider-green-borderDark";
+        return {
+          background: "bg-gradient-to-b from-slider-green-dark to-slider-green-light",
+          border: "border-2 border-slider-green-borderLight"
+        };
       case "declining":
-        return "bg-slider-red-light border-slider-red-borderDark";
+        return {
+          background: "bg-gradient-to-b from-slider-red-dark to-slider-red-light",
+          border: "border-2 border-slider-red-borderLight"
+        };
       default:
-        // Adding a subtle background color for better visibility in neutral state
-        return "bg-transparent border-yellow-400";
+        return {
+          background: "bg-transparent",
+          border: "border-2 border-slider-orange-borderLight"
+        };
     }
   };
 
+  const styling = getTrackStyling();
+
   return (
     <div
-      className={`relative mx-4 h-full min-h-[128px] w-full max-w-[640px] overflow-hidden border-2 sm:mx-10 sm:w-[calc(100%-5rem)] ${getTrackStyling()}`}
+      className={`relative mx-4 h-full min-h-[128px] w-full max-w-[640px] overflow-hidden rounded-lg sm:mx-10 sm:w-[calc(100%-5rem)] ${styling.background} ${styling.border}`}
     >
       {children}
     </div>
